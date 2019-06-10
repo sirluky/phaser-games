@@ -88,7 +88,7 @@ class Flappy extends Phaser.Scene {
       repeat: -1,
     });
     this.physics.add.collider(this.trubky, this.ptak, () => {
-      setTimeout(e => this.scene.start('MENU'), 10);
+      setTimeout(e => this.scene.start('MENU', this.score + ''), 10);
     });
 
     this.physics.add.overlap(this.scorezones, this.ptak, () => {

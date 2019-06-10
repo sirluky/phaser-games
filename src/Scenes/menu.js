@@ -4,10 +4,13 @@ class Menu extends Phaser.Scene {
   constructor() {
     super('MENU');
   }
-  init() {
+  init(skore) {
     this.sound.pauseOnBlur = true;
     this.sound.volume = 0.2;
-    this.rekord = (localStorage.getItem('rekord') && parseInt(localStorage.getItem('rekord'))) || '';
+    console.log(skore);
+    this.skore = (typeof skore === 'string' && skore) || '';
+
+    this.rekord = (localStorage.getItem('rekord') && 'rekord: ' + parseInt(localStorage.getItem('rekord'))) || '';
   }
 
   preload() {
@@ -15,7 +18,9 @@ class Menu extends Phaser.Scene {
   }
 
   create() {
-    this.add.text(320, 250, this.rekord, { fontSize: 100 }).setOrigin(0.5);
+    this.add.text(320, 250, this.skore, { fontSize: 100 }).setOrigin(0.5);
+    this.add.text(320, 350, this.rekord, { fontSize: 30 }).setOrigin(0.5);
+
     let play = this.add
       .image(310, 100, 'play')
       .setScale(1.5)

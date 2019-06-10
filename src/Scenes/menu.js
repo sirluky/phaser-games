@@ -7,6 +7,7 @@ class Menu extends Phaser.Scene {
   init() {
     this.sound.pauseOnBlur = true;
     this.sound.volume = 0.2;
+    this.rekord = (localStorage.getItem('rekord') && parseInt(localStorage.getItem('rekord'))) || '';
   }
 
   preload() {
@@ -14,14 +15,15 @@ class Menu extends Phaser.Scene {
   }
 
   create() {
+    this.add.text(320, 250, this.rekord, { fontSize: 100 }).setOrigin(0.5);
     let play = this.add
-      .image(320, 100, 'play')
+      .image(310, 100, 'play')
       .setScale(1.5)
-      .setOrigin(0.5, 0.5);
+      .setOrigin(0.5);
 
     play.setInteractive();
     play.on('pointerdown', e => {
-      this.scene.start('HRA');
+      this.scene.start('Flappy');
     });
     play.on('pointerover', e => {
       play.setTint(0x00ff00);

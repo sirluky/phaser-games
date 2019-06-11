@@ -15,7 +15,7 @@ class Menu extends Phaser.Scene {
   }
 
   create() {
-    setTimeout(() => this.scene.start('PLAY'), 500);
+    // setTimeout(() => this.scene.start('PLAY'), 500);
 
     let logo = this.add
       .image(this.game.scale.gameSize.width / 2, 50, 'logo')

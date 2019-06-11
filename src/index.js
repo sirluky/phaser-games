@@ -1,20 +1,35 @@
 import Phaser from 'phaser';
 import { Menu } from './Scenes/menu';
+import { Game } from './Scenes/Game';
+import { toGame } from './Scenes/goToGame';
+
 window.onload = function() {
-  var config = {
+  var game = new Phaser.Game({
     type: Phaser.WEBGL,
-    width: 640,
-    height: 480,
-    backgroundColor: 0x5e91fe,
-    scene: [Menu], // add all used scenes
+    width: window.innerHeight * 0.8 < window.innerWidth ? window.innerHeight * 0.8 : window.innerWidth,
+    height: window.innerHeight - 4,
+    backgroundColor: 0x835530,
+    scene: [Menu, Game, toGame], // add all used scenes
     physics: {
       default: 'arcade',
       arcade: {
         gravity: { y: 800, x: 0 },
         debug: true,
+        physics: {
+          default: 'matter',
+          matter: {},
+        },
       },
     },
-  };
-
-  var game = new Phaser.Game(config);
+  });
+  window.addEventListener(
+    'resize',
+    function(event) {
+      game.scale.resize(
+        window.innerHeight * 0.8 < window.innerWidth ? window.innerHeight * 0.8 : window.innerWidth,
+        window.innerHeight - 4,
+      );
+    },
+    false,
+  );
 };

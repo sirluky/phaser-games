@@ -10,15 +10,18 @@ window.onload = function() {
     height: window.innerHeight - 4,
     backgroundColor: 0x835530,
     scene: [Menu, Game, toGame], // add all used scenes
+    // physics: {
+    //   default: 'arcade',
+    //   arcade: {
+    //     gravity: { y: 800, x: 0 },
+    //     debug: true,
+    //
+    //   },
+    // },
     physics: {
-      default: 'arcade',
-      arcade: {
-        gravity: { y: 800, x: 0 },
+      default: 'matter',
+      matter: {
         debug: true,
-        physics: {
-          default: 'matter',
-          matter: {},
-        },
       },
     },
   });

@@ -9,6 +9,7 @@ window.onload = function() {
     width: window.innerHeight * 0.8 < window.innerWidth ? window.innerHeight * 0.8 : window.innerWidth,
     height: window.innerHeight - 4,
     backgroundColor: 0x835530,
+    pixelArt: true,
     scene: [Menu, Game, toGame], // add all used scenes
     // physics: {
     //   default: 'arcade',

@@ -10,12 +10,21 @@ class toGame extends Phaser.Scene {
       x: this.game.scale.gameSize.width / 2,
       y: this.game.scale.gameSize.width / 2 + 50,
     };
+
     this.plrangle = 0;
-    this.cWidth = this.game.scale.gameSize.width / 2 - 5;
+    this.cWidth = 1000;
     this.plrpos = 0;
-    this.plrRange = this.cWidth / 2 + (this.cWidth / 360) * 7; // default position
+    this.plrRange = this.cWidth / 2 + this.cWidth / 4; // default position
+
+    this.positions = [
+      this.cWidth / 2 + this.cWidth / 12,
+      this.cWidth / 2 + this.cWidth / 4,
+      this.cWidth / 2 + this.cWidth / 4 + this.cWidth / 6,
+    ];
 
     this.lastTouchPos = { x: 0, y: 0 };
+    this.plrposRaw = { x: 0, y: 0 };
+
     this.Touching = false;
     // this.cameras.main.setPosition(0, 100);
     // this.cameras.main.pan(this.game.scale.gameSize.width / 2, this.game.scale.gameSize.height / 2);
@@ -24,7 +33,7 @@ class toGame extends Phaser.Scene {
   preload() {
     this.load.spritesheet('plr', 'char.png', { frameWidth: 256, frameHeight: 128 });
     this.load.image('pause', 'pause.png');
-    this.load.image('board', 'board.png');
+    this.load.image('board', 'gboard.png');
   }
 
   create() {
@@ -56,12 +65,18 @@ class toGame extends Phaser.Scene {
 
     this.plr = this.add
       .sprite(this.cpos.x, this.cpos.y, 'plr')
-      .setScale(this.cWidth / 3 / 256 - 0.03)
+      .setScale(this.cWidth / 3 / 500 - 0.03)
       .setOrigin(0.5);
     // this.add.circle()
     this.cameras.main.fadeIn(1000, 131, 85, 48);
     this.plr.anims.play('plr');
     // console.log(crcpos);
+    this.cameras.main.startFollow(this.plr, true, 0.2, 0.2);
+    this.cameras.main.setZoom(0.7);
+
+    setInterval(() => {
+      this.plrRange = this.positions[Phaser.Math.RND.between(0, 2)]; //
+    }, 1000);
   }
   update() {
     const pointer = this.input.activePointer;
@@ -69,7 +84,7 @@ class toGame extends Phaser.Scene {
       var touchX = pointer.x;
       var touchY = pointer.y;
       if (this.Touching === true) {
-        this.plrRange += touchX - this.lastTouchPos.x;
+        this.plrRange += (touchX - this.lastTouchPos.x) * 1.2;
       }
       this.Touching = true;
       this.lastTouchPos = { x: touchX, y: touchY };
@@ -82,6 +97,10 @@ class toGame extends Phaser.Scene {
     // };
     var vector = new Phaser.Math.Vector2({ x: 1, y: 1 });
     vector.setToPolar((this.plrangle / 360) * Math.PI * 2, this.plrRange);
+    this.cameras.main.setFollowOffset(
+      (((vector.y * 0.6) / 4) * (0.5 + this.plrRange) * 1.5) / 1000,
+      ((-vector.x / 5) * this.plrRange) / 1000,
+    );
     this.plrpos = { x: vector.x + this.cpos.x, y: vector.y + this.cpos.y };
     this.plr.setPosition(this.plrpos.x, this.plrpos.y);
     this.plr.setAngle(this.plrangle);

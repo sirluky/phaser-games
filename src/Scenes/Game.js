@@ -4,17 +4,16 @@ import { emmiter } from '../StartGame';
 const cWidth = 1000;
 
 const circlePositions = [(cWidth / 8) * 7 + cWidth / 48, (cWidth / 8) * 7 + (cWidth / 48) * 3, cWidth - cWidth / 48];
+const CratesSpawnOffAngle = 20;
 class Game extends Phaser.Scene {
   constructor() {
     super('GAME');
+    this.gameSpeed = 0.2;
   }
   init() {
-    setTimeout(e => {
-      this.scene.start('MENU');
-    }, 30000);
-    this.createCratesInterval = setTimeout(() => {
-      this.createCrates();
-    }, 500);
+    this.createCratesInterval = setInterval(() => {
+      this.SpawnCrates();
+    }, 3000);
 
     console.log('lerping');
     this.cpos = {
@@ -39,10 +38,11 @@ class Game extends Phaser.Scene {
     this.load.spritesheet('plr', 'char.png', { frameWidth: 256, frameHeight: 128 });
     this.load.image('pause', 'pause.png');
     this.load.image('board', 'thecircle.png');
+    this.load.image('stone', 'stone.png');
   }
 
   create() {
-    this.matter.add.image(-200, 100, 'plr').setIgnoreGravity(true);
+    // this.matter.add.image(-200, 100, 'plr').setIgnoreGravity(true);
     this.spawner = this.add.line(0, 0, 0, 0, 125, 0, 0x00ff00).setDepth(1);
     this.plr = this.matter.add
       .sprite(this.plrpos + 875, this.cpos.y, 'plr')
@@ -54,6 +54,8 @@ class Game extends Phaser.Scene {
     this.matter.world.on('collisionstart', (event, bodyA, bodyB) => {
       console.log(bodyA, bodyB);
       if (bodyA.gameObject.name === 'player' || bodyB.gameObject.name === 'player') console.log('collision');
+      if (bodyA.gameObject.name === 'obstacle' && bodyB.gameObject.name === 'player') this.scene.start('MENU');
+      if (bodyA.gameObject.name === 'player' && bodyB.gameObject.name === 'obstacle') this.scene.start('MENU');
     });
     // this.matter.add.image(50, 50, 'plr');
     this.anims.create({
@@ -151,27 +153,46 @@ class Game extends Phaser.Scene {
     this.plr.setPosition(this.plrpos.x, this.plrpos.y);
     this.plr.setAngle(this.plrangle);
 
-    const { OnCirclePos: spawnerPos } = PositionOnCircle(this.cpos, circlePositions[1], this.plrangle - 5);
+    const { OnCirclePos: spawnerPos } = PositionOnCircle(
+      this.cpos,
+      circlePositions[1],
+      this.plrangle + CratesSpawnOffAngle,
+    );
 
     this.spawner.setOrigin(0.5);
     this.spawner.setPosition(spawnerPos.x, spawnerPos.y);
-    this.spawner.setAngle(this.plrangle - 5);
-    this.plrangle += 0.5;
+    this.spawner.setAngle(this.plrangle + CratesSpawnOffAngle);
+    this.plrangle += this.gameSpeed;
+
+    this.events.on('shutdown', () => {
+      clearInterval(this.createCratesInterval);
+    });
   }
-  createCrates() {
+  SpawnCrates() {
     let multiple = Phaser.Math.RND.between(1, 2);
     let cratesPositions = [];
 
     switch (multiple) {
       case 1:
-        cratesPositions.push(circlePositions[Phaser.Math.RND.between(0, 2)]);
-        cratesPositions.push(circlePositions[Phaser.Math.RND.between(0, 2)]);
+        let cpositions = circlePositions.slice();
+        var rnd = Phaser.Math.RND.between(0, 2);
+        var pos = circlePositions[rnd];
+        cpositions.splice(rnd);
+        cratesPositions.push(pos);
+        cratesPositions.push(cpositions[Phaser.Math.RND.between(0, cpositions.length - 1)]);
         break;
       case 2:
         cratesPositions.push(circlePositions[Phaser.Math.RND.between(0, 2)]);
         break;
     }
-    return cratesPositions;
+    cratesPositions.forEach(thePos => {
+      const { OnCirclePos: poc } = PositionOnCircle(this.cpos, thePos, this.plrangle + CratesSpawnOffAngle);
+      let obst = this.matter.add
+        .image(poc.x, poc.y, 'stone')
+        .setIgnoreGravity(true)
+        .setScale(0.4);
+      obst.name = 'obstacle';
+    });
   }
 }
 export { Game };
@@ -207,4 +228,4 @@ function PositionOnCircle(Centerpos = null, range, angle) {
   const OnCirclePos = { x: vector.x + Centerpos.x, y: vector.y + Centerpos.y };
   return { noOffPos: vector, OnCirclePos };
 }
-function SpawnCrates() {}
+// function SpawnCrates() {}

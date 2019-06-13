@@ -22,7 +22,7 @@ window.onload = function() {
     physics: {
       default: 'matter',
       matter: {
-        debug: true,
+        // debug: true,
       },
     },
   });

@@ -1,166 +1,33 @@
-import 'phaser';
+import Phaser from 'phaser';
+import { emmiter } from '../StartGame';
 
 class toGame extends Phaser.Scene {
   constructor() {
     super('PLAY');
   }
   init() {
-    console.log('lerping');
-    this.cpos = {
-      x: this.game.scale.gameSize.width / 2,
-      y: this.game.scale.gameSize.width / 2 + 50,
-    };
-    this.cLine = 1;
-    this.plrangle = 0;
-    this.cWidth = 1000;
-    this.plrpos = 0;
-    this.plrRange = this.cWidth / 2 + this.cWidth / 4; // default position
-
-    this.positions = [
-      this.cWidth / 2 + this.cWidth / 12,
-      this.cWidth / 2 + this.cWidth / 4,
-      this.cWidth / 2 + this.cWidth / 4 + this.cWidth / 6,
-    ];
-
-    this.lastTouchPos = { x: 0, y: 0 };
-    this.plrposRaw = { x: 0, y: 0 };
-
     this.Touching = false;
-    // this.cameras.main.setPosition(0, 100);
-    // this.cameras.main.pan(this.game.scale.gameSize.width / 2, this.game.scale.gameSize.height / 2);
+    this.lastTouchPos = { x: 0, y: 0 };
   }
 
-  preload() {
-    this.load.spritesheet('plr', 'char.png', { frameWidth: 256, frameHeight: 128 });
-    this.load.image('pause', 'pause.png');
-    this.load.image('board', 'thecircle.png');
-  }
+  preload() {}
 
   create() {
-    this.matter.add.image(-200, 100, 'plr').setIgnoreGravity(true);
-    this.plr = this.matter.add
-      .sprite(this.cpos.x, this.cpos.y, 'plr')
-      .setScale(this.cWidth / 3 / 1500 - 0.03)
+    console.log('gotogame');
+    this.add
+      .text(this.game.scale.gameSize.width / 2, (this.game.scale.gameSize.height / 3) * 2, 'Swipe to change line')
       .setOrigin(0.5);
-    this.plr.name = 'player';
-
-    this.plr.setIgnoreGravity(true);
-    this.matter.world.on('collisionstart', (event, bodyA, bodyB) => {
-      console.log(bodyA, bodyB);
-      if (bodyA.gameObject.name === 'player' || bodyB.gameObject.name === 'player') console.log('collision');
-    });
-    // this.matter.add.image(50, 50, 'plr');
-    this.anims.create({
-      key: 'plr',
-      frames: this.anims.generateFrameNumbers('plr', {
-        start: 0,
-        end: 2,
-      }),
-      frameRate: 15,
-      yoyo: true,
-      repeat: -1,
-    });
-
-    this.add
-      .text(this.game.scale.gameSize.width, 0, 'pause')
-      .setOrigin(1, 0)
-      .setScrollFactor(0);
-
-    this.add
-      .image(this.game.scale.gameSize.width, 15, 'pause')
-      .setOrigin(1, 0)
-      .setScale(0.09)
-      .setTintFill(0xffffff)
-      .setScrollFactor(0);
-    this.add
-      .text(0, 0, 'score')
-      .setOrigin(0, 0)
-      .setScrollFactor(0);
-    this.add
-      .text(22, 40, '0', { fontSize: 50 })
-      .setOrigin(0.5)
-      .setScrollFactor(0);
-    this.add.circle(this.cpos.x, this.cpos.y, this.cWidth, 0x613315).setDepth(-5);
-    this.add
-      .image(this.cpos.x, this.cpos.y, 'board')
-      .setScale(this.cWidth / 800)
-      .setDepth(-4);
-
-    // this.add.circle()
     this.cameras.main.fadeIn(1000, 131, 85, 48);
-    this.plr.anims.play('plr');
-    // console.log(crcpos);
-    this.cameras.main.startFollow(this.plr, true, 0.2, 0.2);
-    this.cameras.main.setZoom(0.7);
+    this.scene.launch('GAME');
+    this.input.on('pointerdown', e => {
+      this.scene.sleep();
+      this.scene.setVisible(false);
+      emmiter.emit('START', 1);
+    });
 
-    // setInterval(() => {
-    //   this.plrRange = this.positions[Phaser.Math.RND.between(0, 2)]; //
-    // }, 1000);
-  }
-  update() {
-    const pointer = this.input.activePointer;
-    const touchX = pointer.x;
-    const touchY = pointer.y;
-
-    const TouchDistMin = 40;
-    if (pointer.isDown) {
-      if (this.Touching === true) {
-      }
-      if (!this.Touching) {
-        this.lastTouchPos = { x: touchX, y: touchY };
-        this.Touching = true;
-      }
-    } else {
-      if (this.Touching) {
-        if (touchX - this.lastTouchPos.x > TouchDistMin) {
-          MoveOnLine.bind(this)(1);
-          console.log('posun vlevo');
-        }
-        if (this.lastTouchPos.x - touchX > TouchDistMin) {
-          MoveOnLine.bind(this)(-1);
-          console.log('posun vpravo');
-        }
-      }
-      this.Touching = false;
-    }
-    // const crcpos = {
-    //   x: Math.sin(this.plrangle) * this.cWidth,
-    //   y: Math.cos(this.plrangle) * this.cWidth,
-    // };
-    var vector = new Phaser.Math.Vector2({ x: 1, y: 1 });
-    vector.setToPolar((this.plrangle / 360) * Math.PI * 2, this.plrRange);
-    this.cameras.main.setFollowOffset(
-      (((vector.y * 0.6) / 4) * (0.5 + this.plrRange) * 1.5) / 1000,
-      ((-vector.x / 5) * this.plrRange) / 1000,
-    );
-
-    this.plrpos = { x: vector.x + this.cpos.x, y: vector.y + this.cpos.y };
-    this.plr.setPosition(this.plrpos.x, this.plrpos.y);
-    this.plr.setAngle(this.plrangle);
-    this.plrangle += 0.5;
+    setTimeout(e => {
+      // emmiter.emit('S', 1);
+    }, 200);
   }
 }
 export { toGame };
-
-function MoveOnLine(smer) {
-  let cline = this.cLine;
-  cline += smer;
-
-  if (cline < this.positions.length && cline >= 0) {
-    this.cLine = cline;
-  }
-  const Range = this.positions[this.cLine];
-  // console.log(this.add.tween);
-  this.add.tween({
-    targets: this,
-    plrRange: Range,
-    duration: 100,
-    delay: 0,
-    ease: t => t,
-  });
-  // this.add.tween(this).to({ plrRange: Range }, 1000, Phaser.Easing.Linear.None, true, 500);
-  // pointsTween.onUpdateCallback(function() {
-  //   console.log(this.plrRange);
-  // }, this);
-  // this.plrRange = this.positions[this.cLine];
-}

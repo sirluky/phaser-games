@@ -33,14 +33,14 @@ class toGame extends Phaser.Scene {
   preload() {
     this.load.spritesheet('plr', 'char.png', { frameWidth: 256, frameHeight: 128 });
     this.load.image('pause', 'pause.png');
-    this.load.image('board', 'gboard.png');
+    this.load.image('board', 'thecircle.png');
   }
 
   create() {
     this.matter.add.image(-200, 100, 'plr').setIgnoreGravity(true);
     this.plr = this.matter.add
       .sprite(this.cpos.x, this.cpos.y, 'plr')
-      .setScale(this.cWidth / 3 / 500 - 0.03)
+      .setScale(this.cWidth / 3 / 1500 - 0.03)
       .setOrigin(0.5);
     this.plr.name = 'player';
 

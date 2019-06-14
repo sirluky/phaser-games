@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 import { Menu } from './Scenes/menu';
 import { Game } from './Scenes/Game';
 import { toGame } from './Scenes/goToGame';
+import { HUD } from './Scenes/HUD';
 
 window.onload = function() {
   var game = new Phaser.Game({
@@ -10,7 +11,7 @@ window.onload = function() {
     height: window.innerHeight - 4,
     backgroundColor: 0x835530,
     pixelArt: true,
-    scene: [Menu, Game, toGame], // add all used scenes
+    scene: [Menu, Game, toGame, HUD], // add all used scenes
     // physics: {
     //   default: 'arcade',
     //   arcade: {

@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import { emmiter } from '../StartGame';
+import { emmiter } from '../GlobalFunc';
 
 const cWidth = 1000;
 
@@ -36,7 +36,6 @@ class Game extends Phaser.Scene {
 
   preload() {
     this.load.spritesheet('plr', 'char.png', { frameWidth: 256, frameHeight: 128 });
-    this.load.image('pause', 'pause.png');
     this.load.image('board', 'thecircle.png');
     this.load.image('stone', 'stone.png');
   }
@@ -54,8 +53,21 @@ class Game extends Phaser.Scene {
     this.matter.world.on('collisionstart', (event, bodyA, bodyB) => {
       console.log(bodyA, bodyB);
       if (bodyA.gameObject.name === 'player' || bodyB.gameObject.name === 'player') console.log('collision');
-      if (bodyA.gameObject.name === 'obstacle' && bodyB.gameObject.name === 'player') this.scene.start('MENU');
+
+      if (bodyA.gameObject.name === 'obstacle' && bodyB.gameObject.name === 'player') {
+        this.scene.start('MENU');
+      }
       if (bodyA.gameObject.name === 'player' && bodyB.gameObject.name === 'obstacle') this.scene.start('MENU');
+      if (bodyA.gameObject.name === 'player' && bodyB.gameObject.name === 'obstacle') this.scene.start('MENU');
+      if (bodyA.gameObject.name === 'Point' && bodyB.gameObject.name === 'player') {
+        emmiter.emit('ScoreUp', 1);
+        this.gameSpeed += 0.05;
+      }
+      if (bodyA.gameObject.name === 'player' && bodyB.gameObject.name === 'Point') {
+        emmiter.emit('ScoreUp', 1);
+        this.gameSpeed += 0.05;
+      }
+      // Point
     });
     // this.matter.add.image(50, 50, 'plr');
     this.anims.create({
@@ -69,25 +81,6 @@ class Game extends Phaser.Scene {
       repeat: -1,
     });
 
-    this.add
-      .text(this.game.scale.gameSize.width, 0, 'pause')
-      .setOrigin(1, 0)
-      .setScrollFactor(0);
-
-    this.add
-      .image(this.game.scale.gameSize.width, 15, 'pause')
-      .setOrigin(1, 0)
-      .setScale(0.09)
-      .setTintFill(0xffffff)
-      .setScrollFactor(0);
-    this.add
-      .text(0, 0, 'score')
-      .setOrigin(0, 0)
-      .setScrollFactor(0);
-    this.add
-      .text(22, 40, '0', { fontSize: 50 })
-      .setOrigin(0.5)
-      .setScrollFactor(0);
     this.add.circle(this.cpos.x, this.cpos.y, cWidth, 0x613315).setDepth(-5);
     this.add
       .image(this.cpos.x, this.cpos.y, 'board')
@@ -117,6 +110,21 @@ class Game extends Phaser.Scene {
     emmiter.on('START', () => {
       //  console.log('pllls');
     });
+
+    for (let i = 0; i < 3; i++) {
+      // this.add.rectangle()
+      let PointRect = this.matter.add
+        .image(0, circlePositions[1], 'stone')
+        .setDisplaySize(125, 5)
+        .setSize(); //.rectangle(0, circlePositions[1], 0, 125, {}); //.setDepth(1); //line(0, circlePositions[1], 0, 0, 125, 0, 0x00ff00).setDepth(1);
+      const { OnCirclePos } = PositionOnCircle(this.cpos, circlePositions[1], i * 90);
+      PointRect.setPosition(OnCirclePos.x, OnCirclePos.y);
+      PointRect.setRotation((i * Math.PI) / 2);
+      PointRect.setStatic(true);
+      PointRect.name = 'Point';
+    }
+
+    this.scene.launch('HUD');
   }
   update() {
     const pointer = this.input.activePointer;
@@ -166,6 +174,8 @@ class Game extends Phaser.Scene {
 
     this.events.on('shutdown', () => {
       clearInterval(this.createCratesInterval);
+      this.scene.stop('PLAY');
+      // this.scene.('HUD');
     });
   }
   SpawnCrates() {
@@ -190,7 +200,8 @@ class Game extends Phaser.Scene {
       let obst = this.matter.add
         .image(poc.x, poc.y, 'stone')
         .setIgnoreGravity(true)
-        .setScale(0.4);
+        .setScale(0.4)
+        .setStatic(true);
       obst.name = 'obstacle';
     });
   }

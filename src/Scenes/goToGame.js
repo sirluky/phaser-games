@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import { emmiter } from '../StartGame';
+import { emmiter } from '../GlobalFunc';
 
 class toGame extends Phaser.Scene {
   constructor() {
@@ -10,13 +10,20 @@ class toGame extends Phaser.Scene {
     this.lastTouchPos = { x: 0, y: 0 };
   }
 
-  preload() {}
+  preload() {
+    this.load.image('swipe', 'swipe.png');
+  }
 
   create() {
     console.log('gotogame');
     this.add
       .text(this.game.scale.gameSize.width / 2, (this.game.scale.gameSize.height / 3) * 2, 'Swipe to change line')
       .setOrigin(0.5);
+    this.add
+      .image(this.game.scale.gameSize.width / 2, (this.game.scale.gameSize.height / 3) * 2 + 50, 'swipe')
+      .setDisplaySize(100, 90)
+      .setOrigin(0.5, 0)
+      .setTintFill(0xffffff);
     this.cameras.main.fadeIn(1000, 131, 85, 48);
     this.scene.launch('GAME');
     this.input.on('pointerdown', e => {

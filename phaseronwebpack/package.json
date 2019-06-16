@@ -1,0 +1,25 @@
+{
+  "name": "vannilla",
+  "version": "1.0.0",
+  "description": "",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack",
+    "start": "webpack --watch",
+    "server": "http-server ./dist -p 8000 -a 127.0.0.1 ",
+    "server-ssh": "http-server ./dist --ssl -c-1 -p 8000 -a 127.0.0.1 "
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "webpack": "^4.34.0",
+    "webpack-cli": "^3.3.4",
+    "webpack-dev-server": "^3.7.1"
+  },
+  "dependencies": {
+    "cislonaslova": "^0.1.1",
+    "phaser": "^3.17.0"
+  }
+}

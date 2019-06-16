@@ -4,17 +4,18 @@ class Menu extends Phaser.Scene {
   constructor() {
     super('MENU');
   }
-  init() {
-    this.sound.pauseOnBlur = true;
-    this.sound.volume = 0.2;
-  }
+  init() {}
 
   preload() {
+    this.facebook.once('startgame', this.startGame, this);
+    this.facebook.showLoadProgress(this);
     this.load.image('play', 'play.png');
     this.load.image('logo', 'logo.png');
   }
 
   create() {
+    this.sound.pauseOnBlur = true;
+    this.sound.volume = 0.2;
     // setTimeout(() => this.scene.start('PLAY'), 500);
 
     let logo = this.add

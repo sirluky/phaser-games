@@ -10,6 +10,21 @@ module.exports = {
   externals: {
     FBInstant: 'FBInstant',
   },
+  devtool: 'inline-source-map',
+  // module: {
+  //   rules: [
+  //     {
+  //       test: /\.tsx?$/,
+  //       use: 'ts-loader',
+  //       exclude: /node_modules/,
+  //     },
+  //   ],
+  // },
+  // resolve: {
+  //   extensions: ['.tsx', '.ts', '.js'],
+  // },
+  mode: 'development',
+
   // build: {
   //   assetsPublicPath: '/',
   //   assetsSubDirectory: 'static',

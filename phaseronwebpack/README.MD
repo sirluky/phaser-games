@@ -12,6 +12,8 @@ Moje první hra pro messenger. Měl jsem nápad na zajímavou 'jednoduchou' hru 
 - Zapis score do FB Api
 - Lepsi spawnovani prekazek
 - Mozna nekdy nejaka reklama, ale pokusim se je zobrazovat jen kdyz to lidem nevadi (treba kdyz vydrzeli 2 min a dali novy rekord rekord) + Moznost zruseni reklam za maly poplatek 0.5\$.
+- Informace do profilu
+
 - ~~Vymyslet lepsi zpusob ovladani~~
 - ~~Základni napojení na FB Instant~~
 
@@ -19,4 +21,5 @@ Moje první hra pro messenger. Měl jsem nápad na zajímavou 'jednoduchou' hru 
 
 - Pridani hry na Google play, pres neco jako PhoneGap. (offline hrani, vetsi volnost)
 - Nové módy
-- Přidaní lidí do teamu
+- Přidaní lidí do vyvojoveho teamu (musela by reklama vynaset)
+- Vice moznosti nastaveni (ovladani, barvy)

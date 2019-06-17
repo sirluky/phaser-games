@@ -15,15 +15,12 @@ class FBpreload extends Phaser.Scene {
     this.facebook.once('startgame', this.startGame, this);
     this.facebook.showLoadProgress(this);
 
-    // this.facebook.once('startgame', this.startGame, this);
-    // this.facebook.showLoadProgress(this);
     this.load.image('play', 'play.png');
     this.load.image('pause', 'pause.png');
     this.load.image('logo', 'logo.png');
     this.load.spritesheet('plr', 'char.png', { frameWidth: 256, frameHeight: 128 });
     this.load.image('board', 'thecircle.png');
     this.load.image('stone', 'stone.png');
-    // console.log(this.game.scale.set);
   }
   startGame() {
     this.scene.start('MENU');

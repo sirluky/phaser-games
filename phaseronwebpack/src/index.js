@@ -4,6 +4,7 @@ import { Game } from './Scenes/Game';
 import { toGame } from './Scenes/goToGame';
 import { HUD } from './Scenes/HUD';
 import { FBpreload } from './Scenes/FBpreload';
+import { SideClick } from './Scenes/Controls';
 
 console.log('Orun');
 // console.log(FBInstant);
@@ -17,13 +18,15 @@ console.log('Orun');
 // });
 FBInstant.initializeAsync().then(() => {
   console.log('game is starting');
+
   var game = new Phaser.Game({
     type: Phaser.WEBGL,
     width: window.innerHeight * 0.8 < window.innerWidth ? window.innerHeight * 0.8 : window.innerWidth,
     height: window.innerHeight, //- 4,
     backgroundColor: 0x835530,
     pixelArt: true,
-    scene: [FBpreload, Menu, Game, toGame, HUD], // add all used scenes
+    // @ts-ignore
+    scene: [FBpreload, Menu, Game, toGame, HUD, SideClick], // add all used scenes
     // physics: {
     //   default: 'arcade',
     //   arcade: {

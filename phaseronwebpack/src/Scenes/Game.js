@@ -25,10 +25,10 @@ class Game extends Phaser.Scene {
     this.plrRange = circlePositions[1]; // default position
 
     this.lastTouchPos = { x: 0, y: 0 };
+    this.Touching = false;
     this.plrposRaw = { x: 0, y: 0 };
     this.gameSpeed = 0.2;
 
-    this.Touching = false;
     // this.cameras.main.setPosition(0, 100);
     // this.cameras.main.pan(this.game.scale.gameSize.width / 2, this.game.scale.gameSize.height / 2);
   }
@@ -115,17 +115,6 @@ class Game extends Phaser.Scene {
     this.cameras.main.startFollow(this.plr, true, 0.2, 0.2);
     this.cameras.main.setZoom(0.7);
 
-    this.input.on('pointerdown', e => {
-      const pointer = this.input.activePointer;
-      const touchX = pointer.x;
-      const touchY = pointer.y;
-      this.Touching = true;
-      this.lastTouchPos = { x: touchX, y: touchY };
-    });
-    this.input.on('pointerup', e => {
-      this.Touching = false;
-    });
-
     emmiter.on('START', () => {
       //  console.log('pllls');
     });
@@ -143,8 +132,6 @@ class Game extends Phaser.Scene {
       PointRect.name = 'Point';
     }
 
-    this.scene.launch('HUD');
-
     this.createCratesInterval = setInterval(e => {
       this.SpawnCrates();
     }, 3000);
@@ -154,27 +141,13 @@ class Game extends Phaser.Scene {
       this.scene.stop('PLAY');
       // this.scene.('HUD');
     });
+    this.scene.launch('HUD');
+    this.scene.launch('CONTROL_SideClick');
+    emmiter.on('🏃‍♂️', smer => {
+      MoveOnLine.bind(this)(smer);
+    });
   }
   update() {
-    const pointer = this.input.activePointer;
-    const touchX = pointer.x;
-    const touchY = pointer.y;
-
-    const TouchDistMin = 70;
-    if (pointer.isDown) {
-      if (this.Touching) {
-        if (touchX - this.lastTouchPos.x > TouchDistMin) {
-          MoveOnLine.bind(this)(1);
-          console.log('posun vlevo');
-          this.lastTouchPos = { x: touchX, y: touchY };
-        }
-        if (this.lastTouchPos.x - touchX > TouchDistMin) {
-          MoveOnLine.bind(this)(-1);
-          console.log('posun vpravo');
-          this.lastTouchPos = { x: touchX, y: touchY };
-        }
-      }
-    }
     // if (this.lastAngleSpawn + 30 <= this.plrangle) {
     //   this.SpawnCrates();
     //   this.lastAngleSpawn = this.plrangle;

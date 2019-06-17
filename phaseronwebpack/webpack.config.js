@@ -11,6 +11,8 @@ module.exports = {
     FBInstant: 'FBInstant',
   },
   devtool: 'inline-source-map',
+  mode: 'development',
+
   // module: {
   //   rules: [
   //     {
@@ -23,7 +25,6 @@ module.exports = {
   // resolve: {
   //   extensions: ['.tsx', '.ts', '.js'],
   // },
-  mode: 'development',
 
   // build: {
   //   assetsPublicPath: '/',

@@ -20,8 +20,6 @@
     "webpack-dev-server": "^3.7.1"
   },
   "dependencies": {
-    "cislonaslova": "^0.1.1",
-    "phaser": "^3.17.0",
-    "ts-loader": "^6.0.2"
+    "phaser": "^3.17.0"
   }
 }

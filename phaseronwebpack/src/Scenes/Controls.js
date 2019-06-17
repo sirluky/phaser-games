@@ -7,26 +7,39 @@ class SideClick extends Phaser.Scene {
   }
 
   create() {
-    this.lastSmer = [];
-    this.input.on('pointerdown', ({ event }) => {
-      if (event.offsetX < this.game.scale.gameSize.width * 0.5) {
-        this.lastSmer.push(-1);
+    this.centerEmitted = false;
+
+    let pointerDown = this.input.on('pointerdown', event => {
+      if (event.downX < this.game.scale.gameSize.width * 0.5) {
+        // this.lastSmer.push(-1);
         emmiter.emit('🏃‍♂️', -1);
       } else {
-        this.lastSmer.push(1);
+        // this.lastSmer.push(1);
         emmiter.emit('🏃‍♂️', 1);
       }
     });
-    this.input.on('pointerup', ({ event }) => {
-      emmiter.emit('🏃‍♂️', this.lastSmer.splice(0, 1) * -1);
-
-      // if (event.offsetX < this.game.scale.gameSize.width * 0.5) {
-      // } else {
-      //   emmiter.emit('🏃‍♂️', 1);
-      // }
+    this.events.on('shutdown', () => {
+      this.input.off('pointerdown');
     });
+    // this.input.on('pointerup', event => {
+    //   emmiter.emit('🏃‍♂️', 0);
+
+    //   // if (event.offsetX < this.game.scale.gameSize.width * 0.5) {
+    //   // } else {
+    //   //   emmiter.emit('🏃‍♂️', 1);
+    //   // }
+    // });
   }
-  update() {}
+  update() {
+    if (!this.input.activePointer.isDown) {
+      if (!this.centerEmitted) {
+        emmiter.emit('🏃‍♂️', 0);
+        this.centerEmitted = true;
+      }
+    } else {
+      this.centerEmitted = false;
+    }
+  }
 }
 
 class SwipeTouch extends Phaser.Scene {

@@ -19,7 +19,7 @@ class Game extends Phaser.Scene {
       y: this.game.scale.gameSize.width / 2 + 50,
     };
     this.cLine = 1;
-    this.plrangle = 0;
+    this.plrangle = 2;
     this.plrpos = 0;
 
     this.plrRange = circlePositions[1]; // default position
@@ -27,7 +27,7 @@ class Game extends Phaser.Scene {
     this.lastTouchPos = { x: 0, y: 0 };
     this.Touching = false;
     this.plrposRaw = { x: 0, y: 0 };
-    this.gameSpeed = 0.2;
+    this.gameSpeed = 0.3;
 
     // this.cameras.main.setPosition(0, 100);
     // this.cameras.main.pan(this.game.scale.gameSize.width / 2, this.game.scale.gameSize.height / 2);
@@ -51,7 +51,8 @@ class Game extends Phaser.Scene {
     this.spawner.name = 'obstacleDestroyer';
     this.plr = this.matter.add
       .sprite(this.plrpos + 875, this.cpos.y, 'plr')
-      .setScale(cWidth / 3 / 1500 - 0.03)
+      .setScale(cWidth / 3 / 1600 - 0.03)
+      .setSize(39, 80)
       .setOrigin(0.5);
     this.plr.name = 'player';
 
@@ -123,12 +124,13 @@ class Game extends Phaser.Scene {
       // this.add.rectangle()
       let PointRect = this.matter.add
         .image(0, circlePositions[1], 'stone')
-        .setDisplaySize(125, 5)
+        .setDisplaySize(125, 50)
         .setSize(); //.rectangle(0, circlePositions[1], 0, 125, {}); //.setDepth(1); //line(0, circlePositions[1], 0, 0, 125, 0, 0x00ff00).setDepth(1);
       const { OnCirclePos } = PositionOnCircle(this.cpos, circlePositions[1], i * 90);
       PointRect.setPosition(OnCirclePos.x, OnCirclePos.y);
       PointRect.setRotation((i * Math.PI) / 2);
       PointRect.setStatic(true);
+      PointRect.setDepth(-4);
       PointRect.name = 'Point';
     }
 
@@ -200,7 +202,8 @@ class Game extends Phaser.Scene {
       let obst = this.matter.add
         .image(poc.x, poc.y, 'stone')
         .setIgnoreGravity(true)
-        .setScale(0.4)
+        .setScale(0.8)
+        .setDepth(-2)
         .setStatic(true);
       obst.name = 'obstacle';
     });
@@ -210,8 +213,20 @@ export { Game };
 
 function MoveOnLine(smer) {
   let cline = this.cLine;
-  cline += smer;
+  if (smer !== 0) {
+    console.log('dole');
 
+    cline += smer;
+
+    // this.add.tween(this).to({ plrRange: Range }, 1000, Phaser.Easing.Linear.None, true, 500);
+    // pointsTween.onUpdateCallback(function() {
+    //   console.log(this.plrRange);
+    // }, this);
+    // this.plrRange = circlePositions[this.cLine];
+  } else {
+    console.log('center');
+    cline = 1;
+  }
   if (cline < circlePositions.length && cline >= 0) {
     this.cLine = cline;
   }
@@ -224,11 +239,6 @@ function MoveOnLine(smer) {
     delay: 0,
     ease: t => t,
   });
-  // this.add.tween(this).to({ plrRange: Range }, 1000, Phaser.Easing.Linear.None, true, 500);
-  // pointsTween.onUpdateCallback(function() {
-  //   console.log(this.plrRange);
-  // }, this);
-  // this.plrRange = circlePositions[this.cLine];
 }
 function PositionOnCircle(Centerpos = null, range, angle) {
   var vector = new Phaser.Math.Vector2({ x: 1, y: 1 });

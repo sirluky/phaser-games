@@ -20,10 +20,10 @@ FBInstant.initializeAsync().then(() => {
   console.log('game is starting');
 
   var game = new Phaser.Game({
-    type: Phaser.WEBGL,
+    type: Phaser.CANVAS,
     width: window.innerHeight * 0.8 < window.innerWidth ? window.innerHeight * 0.8 : window.innerWidth,
     height: window.innerHeight, //- 4,
-    backgroundColor: 0x835530,
+    backgroundColor: 0x0,
     pixelArt: true,
     // @ts-ignore
     scene: [FBpreload, Menu, Game, toGame, HUD, SideClick], // add all used scenes

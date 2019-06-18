@@ -3,7 +3,11 @@ import { emmiter } from '../GlobalFunc';
 
 const cWidth = 1000;
 const speedUpSpeed = 0.025;
-const circlePositions = [(cWidth / 8) * 7 + cWidth / 48, (cWidth / 8) * 7 + (cWidth / 48) * 3, cWidth - cWidth / 48];
+const circlePositions = [
+  (cWidth / 8) * 7 + cWidth / 48 - 0.8,
+  (cWidth / 8) * 7 + (cWidth / 48) * 3 - 3,
+  cWidth - cWidth / 48 - 2.3,
+];
 const CratesSpawnOffAngle = 90;
 class Game extends Phaser.Scene {
   constructor() {
@@ -19,7 +23,7 @@ class Game extends Phaser.Scene {
       y: this.game.scale.gameSize.width / 2 + 50,
     };
     this.cLine = 1;
-    this.plrangle = 2;
+    this.plrangle = 185;
     this.plrpos = 0;
 
     this.plrRange = circlePositions[1]; // default position
@@ -35,23 +39,24 @@ class Game extends Phaser.Scene {
 
   preload() {
     this.load.spritesheet('plr', 'char.png', { frameWidth: 256, frameHeight: 128 });
-    this.load.image('board', 'thecircle.png');
-    this.load.image('stone', 'stone.png');
+    this.load.image('board', 'circle.svg');
+    this.load.spritesheet('stone', 'astone.png', { frameWidth: 32 });
   }
 
   create() {
     this.matter.add.image(-200, 100, 'plr').setIgnoreGravity(true);
     // this.spawner = this.add.line(0, 0, 0, 0, 125, 0, 0x00ff00).setDepth(1);
     this.spawner = this.matter.add.image(0, 0, 'stone');
-    this.spawner.setDepth(1);
-    this.spawner.setDisplaySize(125, 60);
+    this.spawner.setDepth(2);
+    this.spawner.setScale(5, 4);
+    this.spawner.setVisible(false);
     this.spawner.setSize();
 
     // .setIgnoreGravity(true);
     this.spawner.name = 'obstacleDestroyer';
     this.plr = this.matter.add
       .sprite(this.plrpos + 875, this.cpos.y, 'plr')
-      .setScale(cWidth / 3 / 1600 - 0.03)
+      .setScale(cWidth / 3 / 1800 - 0.03)
       .setSize(39, 80)
       .setOrigin(0.5);
     this.plr.name = 'player';
@@ -64,8 +69,8 @@ class Game extends Phaser.Scene {
       if (bodyA.gameObject.name === 'obstacle' && bodyB.gameObject.name === 'player') {
         this.scene.start('MENU');
       }
-      if (bodyA.gameObject.name === 'player' && bodyB.gameObject.name === 'obstacle') this.scene.start('MENU');
-      if (bodyA.gameObject.name === 'player' && bodyB.gameObject.name === 'obstacle') this.scene.start('MENU');
+      // if (bodyA.gameObject.name === 'player' && bodyB.gameObject.name === 'obstacle') this.scene.start('MENU');
+      // if (bodyA.gameObject.name === 'player' && bodyB.gameObject.name === 'obstacle') this.scene.start('MENU');
       if (bodyA.gameObject.name === 'Point' && bodyB.gameObject.name === 'player') {
         emmiter.emit('ScoreUp', 1);
         this.gameSpeed += speedUpSpeed;
@@ -104,10 +109,12 @@ class Game extends Phaser.Scene {
       repeat: -1,
     });
 
-    this.add.circle(this.cpos.x, this.cpos.y, cWidth, 0x613315).setDepth(-5);
+    // this.add.circle(this.cpos.x, this.cpos.y, cWidth, 0x613315).setDepth(-5);
     this.add
       .image(this.cpos.x, this.cpos.y, 'board')
-      .setScale(cWidth / 800)
+      .setDisplaySize(2012, 2012)
+      .setAlpha(0.5)
+      // .setScale(0.5)
       .setDepth(-4);
 
     // this.add.circle()
@@ -177,7 +184,7 @@ class Game extends Phaser.Scene {
 
     this.spawner.setOrigin(0.5);
     this.spawner.setPosition(spawnerPos.x, spawnerPos.y);
-    this.spawner.setAngle(this.plrangle + CratesSpawnOffAngle + 10 + 5);
+    this.spawner.setAngle(this.plrangle /*+ CratesSpawnOffAngle*/ + 10 + 5);
     this.plrangle += this.gameSpeed;
   }
   SpawnCrates() {
@@ -200,11 +207,12 @@ class Game extends Phaser.Scene {
     cratesPositions.forEach(thePos => {
       const { OnCirclePos: poc } = PositionOnCircle(this.cpos, thePos, this.plrangle + CratesSpawnOffAngle);
       let obst = this.matter.add
-        .image(poc.x, poc.y, 'stone')
+        .sprite(poc.x, poc.y, 'stone')
         .setIgnoreGravity(true)
         .setScale(0.8)
         .setDepth(-2)
-        .setStatic(true);
+        .setStatic(true)
+        .setTintFill(0x6c7a7d);
       obst.name = 'obstacle';
     });
   }
@@ -214,7 +222,7 @@ export { Game };
 function MoveOnLine(smer) {
   let cline = this.cLine;
   if (smer !== 0) {
-    console.log('dole');
+    // console.log('dole');
 
     cline += smer;
 
@@ -224,21 +232,23 @@ function MoveOnLine(smer) {
     // }, this);
     // this.plrRange = circlePositions[this.cLine];
   } else {
-    console.log('center');
+    // console.log('center');
     cline = 1;
   }
-  if (cline < circlePositions.length && cline >= 0) {
+
+  if (cline < circlePositions.length && cline >= 0 && this.cLine !== cline) {
     this.cLine = cline;
+    const Range = circlePositions[this.cLine];
+    // console.log(this.add.tween);
+    this.add.tween({
+      targets: this,
+      plrRange: Range,
+      duration: 100,
+      delay: 0,
+      // ease: t => t,
+      ease: 'Sine.easeIn',
+    });
   }
-  const Range = circlePositions[this.cLine];
-  // console.log(this.add.tween);
-  this.add.tween({
-    targets: this,
-    plrRange: Range,
-    duration: 100,
-    delay: 0,
-    ease: t => t,
-  });
 }
 function PositionOnCircle(Centerpos = null, range, angle) {
   var vector = new Phaser.Math.Vector2({ x: 1, y: 1 });

@@ -10,25 +10,19 @@ class HUD extends Phaser.Scene {
   }
 
   preload() {
-    this.load.image('pause', 'pause.png');
+    // this.load.image('pause', 'pause.png');
   }
 
   create() {
-    this.add.text(this.game.scale.gameSize.width, 0, 'pause').setOrigin(1, 0);
+    // this.add.text(this.game.scale.gameSize.width, 0, 'pause').setOrigin(1, 0);
 
-    this.add
-      .image(this.game.scale.gameSize.width, 15, 'pause')
-      .setOrigin(1, 0)
-      .setScale(0.09)
-      .setTintFill(0xffffff);
-    this.add
-      .text(0, 0, 'score')
-      .setOrigin(0, 0)
-      .setScrollFactor(0);
-    let scoretext = this.add
-      .text(22, 40, this.score, { fontSize: 50 })
-      .setOrigin(0.5)
-      .setScrollFactor(0);
+    // this.add
+    //   .image(this.game.scale.gameSize.width, 15, 'pause')
+    //   .setOrigin(1, 0)
+    //   .setScale(0.09)
+    //   .setTintFill(0xffffff);
+    // this.add.text(this.game.scale.gameSize.width, 0, 'score').setOrigin(0.5);
+    let scoretext = this.add.text(5, 5, this.score, { fontSize: 50 }).setOrigin(0);
 
     emmiter.on('ScoreUp', score => {
       this.score += score;

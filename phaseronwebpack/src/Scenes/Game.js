@@ -69,8 +69,8 @@ class Game extends Phaser.Scene {
       if (bodyA.gameObject.name === 'obstacle' && bodyB.gameObject.name === 'player') {
         this.scene.start('MENU');
       }
-      // if (bodyA.gameObject.name === 'player' && bodyB.gameObject.name === 'obstacle') this.scene.start('MENU');
-      // if (bodyA.gameObject.name === 'player' && bodyB.gameObject.name === 'obstacle') this.scene.start('MENU');
+      if (bodyA.gameObject.name === 'player' && bodyB.gameObject.name === 'obstacle') this.scene.start('MENU');
+      if (bodyA.gameObject.name === 'player' && bodyB.gameObject.name === 'obstacle') this.scene.start('MENU');
       if (bodyA.gameObject.name === 'Point' && bodyB.gameObject.name === 'player') {
         emmiter.emit('ScoreUp', 1);
         this.gameSpeed += speedUpSpeed;
@@ -148,7 +148,7 @@ class Game extends Phaser.Scene {
     this.events.on('shutdown', () => {
       clearInterval(this.createCratesInterval);
       this.scene.stop('PLAY');
-      // this.scene.('HUD');
+      this.scene.stop('HUD');
     });
     this.scene.launch('HUD');
     this.scene.launch('CONTROL_SideClick');

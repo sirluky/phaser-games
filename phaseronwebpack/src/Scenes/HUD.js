@@ -31,6 +31,10 @@ class HUD extends Phaser.Scene {
 
     this.events.on('shutdown', () => {
       emmiter.off('ScoreUp');
+
+      // FBInstant.player.setDataAsync({
+      //   score: Math.max(0, this.score),
+      // });
     });
   }
 }

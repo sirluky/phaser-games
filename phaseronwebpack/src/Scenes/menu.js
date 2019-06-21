@@ -18,7 +18,7 @@ class Menu extends Phaser.Scene {
     // this.facebook.showLoadProgress(this);
     const profile = FBInstant.player.getPhoto();
     this.load.image('play', 'play.png');
-    this.load.image('logo', 'logo.png');
+    this.load.image('logo', 'game logo.png');
     this.load.image('profile', profile);
   }
 
@@ -34,11 +34,16 @@ class Menu extends Phaser.Scene {
       })
       .setOrigin(0, 0);
     if (this.played) {
-      let ScoreText = this.add
-        .text(this.game.scale.gameSize.width / 2, this.game.scale.gameSize.height / 2 + 15, cscore, {
+      this.add
+        .text(this.game.scale.gameSize.width / 2, this.game.scale.gameSize.height / 2 + 15, 'Score:', {
           fontSize: 40,
         })
-        .setOrigin(0.5, 0);
+        .setOrigin(1, 0);
+      let ScoreText = this.add
+        .text(this.game.scale.gameSize.width / 2 + 20, this.game.scale.gameSize.height / 2 + 15, cscore, {
+          fontSize: 40,
+        })
+        .setOrigin(0, 0);
     } else {
     }
 
@@ -77,7 +82,7 @@ class Menu extends Phaser.Scene {
 
     let logo = this.add
       .image(this.game.scale.gameSize.width / 2, 100, 'logo')
-      .setScale(this.game.scale.gameSize.width / 640)
+      .setScale((this.game.scale.gameSize.width / 640) * 0.5)
       .setOrigin(0.5, 0);
 
     this.add

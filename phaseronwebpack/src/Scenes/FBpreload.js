@@ -17,7 +17,7 @@ class FBpreload extends Phaser.Scene {
 
     this.load.image('play', 'play.png');
     this.load.image('pause', 'pause.png');
-    this.load.image('logo', 'logo.png');
+    this.load.image('logo', 'game logo.png');
     this.load.spritesheet('plr', 'char.png', { frameWidth: 256, frameHeight: 128 });
     this.load.spritesheet('stone', 'astone.png', { frameWidth: 32 });
     this.load.image('board', 'circle.svg');

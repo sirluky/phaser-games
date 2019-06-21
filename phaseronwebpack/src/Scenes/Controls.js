@@ -1,6 +1,5 @@
 import 'phaser';
 import { emmiter } from '../GlobalFunc';
-
 class SideClick extends Phaser.Scene {
   constructor() {
     super('CONTROL_SideClick');

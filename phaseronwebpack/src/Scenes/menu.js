@@ -4,7 +4,9 @@ class Menu extends Phaser.Scene {
   constructor() {
     super('MENU');
   }
-  init() {}
+  init(data) {
+    this.played = data['played'];
+  }
 
   preload() {
     // console.log('fb', this.facebook);
@@ -21,7 +23,24 @@ class Menu extends Phaser.Scene {
   }
 
   create() {
-    let BestScoreText = this.add.text(this.game.scale.gameSize.width / 2, 5, '', { fontSize: 40 }, 60);
+    const { score, cscore } = {
+      score: localStorage.getItem('score'),
+      cscore: localStorage.getItem('cscore'),
+    };
+    this.add.text(this.game.scale.gameSize.width - 190, 20, 'Best:', { fontSize: 30 }).setOrigin(0, 0);
+    let BestScoreText = this.add
+      .text(this.game.scale.gameSize.width - 90, 15, `${score >= cscore ? score : cscore}`, {
+        fontSize: 40,
+      })
+      .setOrigin(0, 0);
+    if (this.played) {
+      let ScoreText = this.add
+        .text(this.game.scale.gameSize.width / 2, this.game.scale.gameSize.height / 2 + 15, cscore, {
+          fontSize: 40,
+        })
+        .setOrigin(0.5, 0);
+    } else {
+    }
 
     // this.facebook.on('savestats', ({ score }) => {
     //   BestScoreText.setText(score);
@@ -34,23 +53,23 @@ class Menu extends Phaser.Scene {
     //     BestScoreText.setText(savedData.bestScore);
     //   }
     // });
-    FBInstant.player.setDataAsync({
-      score: 10,
-    });
-    this.facebook.saveStats({ score: 1 });
+    // FBInstant.player.setDataAsync({
+    //   score: 10,
+    // });
+    // this.facebook.saveStats({ score: 1 });
 
-    this.facebook.on('savestats', function(data) {
-      this.facebook.getStats();
-      console.log('ulozeno');
-      //  Handle what the game should do after the stats have saved
-    });
-    this.facebook.on('getstatsfail', function(error) {
-      //  Handle what the game should do if the stats fail to load.
-      throw error;
-    });
-    this.facebook.on('getstats', function({ score = 0 }) {
-      console.log('score je ' + score);
-    });
+    // this.facebook.on('savestats', function(data) {
+    //   this.facebook.getStats();
+    //   console.log('ulozeno');
+    //   //  Handle what the game should do after the stats have saved
+    // });
+    // this.facebook.on('getstatsfail', function(error) {
+    //   //  Handle what the game should do if the stats fail to load.
+    //   throw error;
+    // });
+    // this.facebook.on('getstats', function({ score = 0 }) {
+    //   console.log('score je ' + score);
+    // });
 
     this.sound.pauseOnBlur = true;
     this.sound.volume = 0.2;
@@ -79,10 +98,10 @@ class Menu extends Phaser.Scene {
       // this.cameras.main.shake(300, 0.01);
       this.cameras.main.pan(this.game.scale.gameSize.width / 2, this.game.scale.gameSize.height, 1000, 'Sine');
       // this.cameras.main.setAlpha(0.1);
-      this.cameras.main.fadeOut(500, 131, 85, 48);
+      this.cameras.main.fadeOut(500, 0, 0, 0);
       setTimeout(() => {
         this.scene.setVisible(false);
-        this.scene.launch('PLAY');
+        this.scene.start('PLAY');
       }, 500);
 
       // this.cameras.main.scrollY = 200;

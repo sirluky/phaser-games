@@ -27,7 +27,7 @@ class toGame extends Phaser.Scene {
       .setOrigin(0.5, 0)
       .setTintFill(0xffffff)
       .setAlpha(0.5);
-    this.cameras.main.fadeIn(1000, 131, 85, 48);
+    this.cameras.main.fadeIn(1000, 0, 0, 0);
     this.scene.launch('GAME');
     this.input.on('pointerdown', e => {
       this.scene.sleep();

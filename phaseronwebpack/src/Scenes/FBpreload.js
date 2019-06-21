@@ -23,7 +23,24 @@ class FBpreload extends Phaser.Scene {
     this.load.image('board', 'circle.svg');
     // this.load.image('board', 'thecircle.png');
   }
-  startGame() {
+  async startGame() {
+    const LoadedData = await new Promise((resolve, reject) => {
+      this.facebook.once('getstats', data => {
+        if (data.score >= 0 && data.tries >= 0) {
+          console.log('score je nacteno', data.score);
+        } else {
+          data.score = 0;
+          data.tries = 0;
+        }
+        resolve(data);
+        // this.BestScoreText.setText('' + data.score);
+        // this.TriesText.setText('' + data.tries);
+      });
+      this.facebook.getStats();
+    });
+
+    //('score', LoadedData);
+    localStorage.setItem('score', LoadedData.score);
     this.scene.start('MENU');
   }
 }

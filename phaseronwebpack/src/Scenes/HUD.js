@@ -27,14 +27,22 @@ class HUD extends Phaser.Scene {
     emmiter.on('ScoreUp', score => {
       this.score += score;
       scoretext.setText('' + this.score);
+      localStorage.setItem('cscore', this.score);
     });
 
     this.events.on('shutdown', () => {
       emmiter.off('ScoreUp');
-
-      // FBInstant.player.setDataAsync({
-      //   score: Math.max(0, this.score),
-      // });
+      let cscore = localStorage.getItem('cscore');
+      if (cscore > localStorage.getItem('score')) {
+        localStorage.setItem('score', cscore);
+      }
+      this.facebook.saveStats({
+        score: Math.max(this.score, localStorage.getItem('cscore')),
+      });
+      this.facebook.once('incstats', function(data) {
+        localStorage.setItem('tries', data.tries);
+      });
+      this.facebook.incStats({ tries: 1 });
     });
   }
 }

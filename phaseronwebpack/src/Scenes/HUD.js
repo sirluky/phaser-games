@@ -31,6 +31,21 @@ class HUD extends Phaser.Scene {
 
     this.events.on('shutdown', () => {
       emmiter.off('ScoreUp');
+      // this.facebook.saveStats({ score: window.game.data.score < this.score ? this.score : window.game.data.score });
+      // this.facebook.incStats({ tries: 1 });
+      this.facebook.on('getstats', data => {
+        //  Handle the loaded data here
+        this.facebook.saveStats({
+          score: this.score >= data.score ? this.score : data.score,
+          tries: data.tries >= 0 ? data.tries + 1 : 0,
+        });
+      });
+
+      this.facebook.on('getstatsfail', function(error) {
+        //  Handle what the game should do if the stats fail to load
+      });
+
+      this.facebook.getStats();
 
       // FBInstant.player.setDataAsync({
       //   score: Math.max(0, this.score),

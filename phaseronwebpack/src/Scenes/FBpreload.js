@@ -4,7 +4,10 @@ class FBpreload extends Phaser.Scene {
   constructor() {
     super('FBpreload');
   }
-  init() {}
+  init() {
+    this.sound.pauseOnBlur = true;
+    this.sound.volume = 0.5;
+  }
 
   preload() {
     this.game.scale.gameSize.setAspectRatio(1);

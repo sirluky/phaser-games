@@ -23,6 +23,15 @@ class Menu extends Phaser.Scene {
   }
 
   create() {
+    FBInstant.getLeaderboardAsync('Score.' + FBInstant.context.getID())
+      .then(leaderboard => leaderboard.getEntriesAsync(10, 0))
+      .then(entries => {
+        for (var i = 0; i < entries.length; i++) {
+          console.log(entries[i].getRank() + '. ' + entries[i].getPlayer().getName() + ': ' + entries[i].getScore());
+        }
+      })
+      .catch(error => console.error(error));
+
     const { score, cscore } = {
       score: localStorage.getItem('score'),
       cscore: localStorage.getItem('cscore'),
@@ -47,37 +56,14 @@ class Menu extends Phaser.Scene {
     } else {
     }
 
-    // this.facebook.on('savestats', ({ score }) => {
-    //   BestScoreText.setText(score);
-    //   console.log('test');
-    // // });
-    // FBInstant.player.getDataAsync(['score']).then(function(data) {
-    //   console.log('loaded', data);
-    //   if (typeof data['score'] !== 'undefined') {
-    //     savedData.bestScore = data['score'];
-    //     BestScoreText.setText(savedData.bestScore);
-    //   }
-    // });
-    // FBInstant.player.setDataAsync({
-    //   score: 10,
-    // });
-    // this.facebook.saveStats({ score: 1 });
+    FBInstant.getLeaderboardAsync('Score.' + FBInstant.context.getID())
+      .then(leaderboard => {
+        console.log(leaderboard.getName());
+        return leaderboard.setScoreAsync(localStorage.getItem('score'));
+      })
+      .then(() => console.log('Score: ' + localStorage.getItem('score') + ' saved'))
+      .catch(error => console.error(error));
 
-    // this.facebook.on('savestats', function(data) {
-    //   this.facebook.getStats();
-    //   console.log('ulozeno');
-    //   //  Handle what the game should do after the stats have saved
-    // });
-    // this.facebook.on('getstatsfail', function(error) {
-    //   //  Handle what the game should do if the stats fail to load.
-    //   throw error;
-    // });
-    // this.facebook.on('getstats', function({ score = 0 }) {
-    //   console.log('score je ' + score);
-    // });
-
-    this.sound.pauseOnBlur = true;
-    this.sound.volume = 0.2;
     // setTimeout(() => this.scene.start('PLAY'), 500);
 
     let logo = this.add

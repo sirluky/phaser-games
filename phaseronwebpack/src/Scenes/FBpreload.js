@@ -43,7 +43,8 @@ class FBpreload extends Phaser.Scene {
     });
 
     //('score', LoadedData);
-    localStorage.setItem('score', LoadedData.score);
+    localStorage.removeItem('cscore');
+    localStorage.setItem('score', Math.max(LoadedData.score, localStorage.getItem('score')));
     this.scene.start('MENU');
   }
 }

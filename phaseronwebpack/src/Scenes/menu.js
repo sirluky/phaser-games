@@ -23,12 +23,14 @@ class Menu extends Phaser.Scene {
   }
 
   create() {
+    console.log('fbID', FBInstant.context.getID());
     FBInstant.getLeaderboardAsync('Score.' + FBInstant.context.getID())
       .then(leaderboard => leaderboard.getEntriesAsync(10, 0))
       .then(entries => {
-        for (var i = 0; i < entries.length; i++) {
-          console.log(entries[i].getRank() + '. ' + entries[i].getPlayer().getName() + ': ' + entries[i].getScore());
-        }
+        // for (var i = 0; i < entries.length; i++) {
+        //   console.log(entries[i].getRank() + '. ' + entries[i].getPlayer().getName() + ': ' + entries[i].getScore());
+        // }
+        console.log(entries);
       })
       .catch(error => console.error(error));
 
@@ -55,14 +57,6 @@ class Menu extends Phaser.Scene {
         .setOrigin(0, 0);
     } else {
     }
-
-    FBInstant.getLeaderboardAsync('Score.' + FBInstant.context.getID())
-      .then(leaderboard => {
-        console.log(leaderboard.getName());
-        return leaderboard.setScoreAsync(localStorage.getItem('score'));
-      })
-      .then(() => console.log('Score: ' + localStorage.getItem('score') + ' saved'))
-      .catch(error => console.error(error));
 
     // setTimeout(() => this.scene.start('PLAY'), 500);
 
@@ -104,6 +98,7 @@ class Menu extends Phaser.Scene {
     play.on('pointerout', e => {
       play.clearTint();
     });
+    localStorage.removeItem('cscore');
   }
 }
 export { Menu };

@@ -36,25 +36,24 @@ class HUD extends Phaser.Scene {
       if (cscore > localStorage.getItem('score')) {
         localStorage.setItem('score', cscore);
       }
-      FBInstant.updateAsync({
-        action: 'CUSTOM',
-        cta: 'Play',
-        image:
-          'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAkElEQVQ4T7WT0Q2AMAhEYQWXc0aXcwUMVcz1CkkbY/9a4XEeoCJi8uFoBrDzSJG67cP7AIhkDkYofnsBVSKX5LgOgGSz3hpVD72PQyK2AbLqDoikgGWQFzD8MwBaVb4/Kv4FoIEoH32YUsDylwFTHngQt7FzHbvCbQxJDMnmuRykGUg2L+UuVAvK85Ju48p2XzVYiAFA/7O/AAAAAElFTkSuQmCC',
-        text: {
-          default: 'Edgar právě překonal váš rekord a dosáhnul 9 bodů.',
-          localizations: {
-            en_US: 'Edgar právě překonal váš rekord a dosáhnul 9 bodů.',
-            cz_CS: 'Edgar právě překonal váš rekord a dosáhnul 9 bodů.',
-          },
-        },
-        template: 'BEATED_FRIEND',
-        data: { myReplayData: '...' },
-        strategy: 'IMMEDIATE',
-        notification: 'NO_PUSH',
-      }).then(function() {
-        console.log('Message was sent successfully');
-      });
+   FBInstant.updateAsync({
+  action: 'CUSTOM',
+  cta: 'Play',
+  image: base64Picture,
+  text: {
+    default: 'Edgar just played BASH for 9 points!',
+    localizations: {
+      en_US: 'Edgar just played BASH for 9 points!',
+      pt_BR: 'Edgar jogou BASH por 9 pontos!',
+    }
+  }
+  template: 'HIGHSCORE',
+  data: { myReplayData: '...' },
+  strategy: 'IMMEDIATE',
+  notification: 'NO_PUSH',
+}).then(function() {
+  console.log('Message was sent successfully');
+});
       this.facebook.saveStats({
         score: Math.max(this.score, localStorage.getItem('cscore')),
       });
@@ -63,6 +62,14 @@ class HUD extends Phaser.Scene {
       });
       this.facebook.incStats({ tries: 1 });
     });
+
+    FBInstant.getLeaderboardAsync('Score.' + FBInstant.context.getID())
+      .then(leaderboard => {
+        console.log(leaderboard.getName());
+        return leaderboard.setScoreAsync(localStorage.getItem('cscore'), '{rank: "Master"}');
+      })
+      .then(() => console.log('Score saved'))
+      .catch(error => console.error(error));
   }
 }
 export { HUD };
